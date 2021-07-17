@@ -15,7 +15,7 @@ import datetime
 import sys
 import os
 from os import path as osp
-from urllib.parse import urlencode, quote_plus
+from urllib.parse import quote_plus
 
 
 # Page set
@@ -27,6 +27,12 @@ URL = "https://www.baidu.com/s?wd={wd}&pn={pn}"
 help_c = """Task to research baidu with your keyword, and then save it as pdf."""
 help_output = "Output directory, like: ~/Desktop."
 help_wd = "The keyword what you want to resarch."
+
+def test_new_file(path):
+    with open(path, "a") as f:
+        f.write(path)
+    return True
+
 
 @click.command()
 @click.help_option("-h", "--help", help=help_c)
@@ -48,10 +54,19 @@ def main(output_dir, keyword):
         path = osp.join(output_dir, this_file_name)
         cmd = f'{WKHTMLTOPDF} "{url}" "{path}"'
         print(cmd)
-        os.system(cmd)
+        test_new_file(path)
+        # os.system(cmd)
 
     print("All are Done.....")
 
 if __name__ == '__main__':
     main()
 
+"""
+docker run -d --name baidu_research \
+    -p 8888:8888 \
+    -e LANG=zh_CN.UTF-8 \
+    -e KEYWORD=odoo \
+    -v ~/workdir/OUT_FOLDER:/app/OUTPUT \
+    baidu_research
+"""
