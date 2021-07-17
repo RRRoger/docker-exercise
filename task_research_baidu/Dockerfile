@@ -18,12 +18,11 @@ WORKDIR /app
 ADD requirements.txt requirements.txt
 ADD task_save_baidu_research.py task_save_baidu_research.py
 
-# Install Libaries
+# Install Libaries and wkhtmltopdf
 RUN pip install --no-cache-dir -r requirements.txt \
- -i $PY_MIRROR --trusted-host $SERVER
+        -i $PY_MIRROR --trusted-host $SERVER \
+    && apk add --no-cache wkhtmltopdf
 
-# wkhtmltopdf
-RUN apk add --no-cache wkhtmltopdf
 # 复制字体到字体目录，如果宿主机没有准备好字体文件，这里可以换成使用wget去下载
 COPY fonts/SourceHanSansSC-VF.otf /usr/share/fonts/
 
