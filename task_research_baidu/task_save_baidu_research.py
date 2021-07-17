@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#coding:utf-8
 
 """
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
@@ -65,8 +65,7 @@ if __name__ == '__main__':
 """
 docker run -d --name baidu_research \
     -p 8888:8888 \
-    -e LANG=zh_CN.UTF-8 \
-    -e KEYWORD=odoo \
+    -e KEYWORD=三体 \
     -v ~/workdir/OUT_FOLDER:/app/OUTPUT \
     baidu_research
 """
