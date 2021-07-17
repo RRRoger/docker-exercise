@@ -29,6 +29,7 @@ help_c = """Task to research baidu with your keyword, and then save it as pdf.""
 help_output = "Output directory, like: ~/Desktop."
 help_wd = "The keyword what you want to resarch."
 
+
 def test_new_file(path):
     with open(path, "a") as f:
         f.write(path)
@@ -62,14 +63,3 @@ def main(output_dir, keyword):
 
 if __name__ == '__main__':
     main()
-
-"""
-https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/OTF/SourceHanSansSC-VF.otf
-
-docker run -d --name baidu_research1 \
-    -e KEYWORD=三体 \
-    -v ~/workdir/OUT_FOLDER:/app/OUTPUT \
-    -v /tmp:/tmp \
-    baidu_research
-
-"""
