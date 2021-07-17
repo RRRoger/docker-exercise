@@ -22,12 +22,18 @@ ADD task_save_baidu_research.py task_save_baidu_research.py
 RUN pip install --no-cache-dir -r requirements.txt \
  -i $PY_MIRROR --trusted-host $SERVER
 
+# wkhtmltopdf
+RUN apk add --no-cache wkhtmltopdf
+# 复制字体到字体目录，如果宿主机没有准备好字体文件，这里可以换成使用wget去下载
+COPY fonts/SourceHanSansSC-VF.otf /usr/share/fonts/
+
 # 假装需要暴露端口
 # EXPOSE 8888
-COPY entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["entrypoint.sh"]
-# CMD [""]
 
-# ENTRYPOINT [ "python" ]
-CMD [ "tail", "-f", "task_save_baidu_research.py" ]
-# CMD [ "python", "task_save_baidu_research.py", "-wd", $KEYWORD ]
+COPY entrypoint.sh /usr/local/bin/
+
+# For testing in terminal
+# CMD [ "tail", "-f", "task_save_baidu_research.py" ]
+
+ENTRYPOINT ["entrypoint.sh"]
+CMD [""]

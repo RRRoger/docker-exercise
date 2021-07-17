@@ -21,7 +21,8 @@ from urllib.parse import quote_plus
 # Page set
 PAGES = [0, 1, 2]
 
-WKHTMLTOPDF = "/usr/local/bin/wkhtmltopdf"
+# WKHTMLTOPDF = "/usr/local/bin/wkhtmltopdf"
+WKHTMLTOPDF = "wkhtmltopdf"
 URL = "https://www.baidu.com/s?wd={wd}&pn={pn}"
 
 help_c = """Task to research baidu with your keyword, and then save it as pdf."""
@@ -54,8 +55,8 @@ def main(output_dir, keyword):
         path = osp.join(output_dir, this_file_name)
         cmd = f'{WKHTMLTOPDF} "{url}" "{path}"'
         print(cmd)
-        test_new_file(path)
-        # os.system(cmd)
+        # test_new_file(path)
+        os.system(cmd)
 
     print("All are Done.....")
 
@@ -63,9 +64,12 @@ if __name__ == '__main__':
     main()
 
 """
-docker run -d --name baidu_research \
-    -p 8888:8888 \
+https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/OTF/SourceHanSansSC-VF.otf
+
+docker run -d --name baidu_research1 \
     -e KEYWORD=三体 \
     -v ~/workdir/OUT_FOLDER:/app/OUTPUT \
+    -v /tmp:/tmp \
     baidu_research
+
 """
