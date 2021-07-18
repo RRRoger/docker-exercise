@@ -1,7 +1,7 @@
 FROM python:3.8-alpine
 
 # Generate locale C.UTF-8 for scripts and general locale data
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 ENV LANGUAGE=C.UTF-8
 
 LABEL author="RRRoger<chenpeng.0418@163.com>"
