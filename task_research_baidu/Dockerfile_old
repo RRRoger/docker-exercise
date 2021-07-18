@@ -1,4 +1,4 @@
-FROM leoossais/python-wkhtmltopdf
+FROM python:3.8-alpine
 
 # Generate locale C.UTF-8 for scripts and general locale data
 ENV LANG C.UTF-8
@@ -20,19 +20,21 @@ ADD task_save_baidu_research.py task_save_baidu_research.py
 
 # Install Libaries and wkhtmltopdf
 RUN pip install --no-cache-dir -r requirements.txt \
-        -i $PY_MIRROR --trusted-host $SERVER
+        -i $PY_MIRROR --trusted-host $SERVER \
+    && apk add --no-cache wkhtmltopdf
 
 # copy chinese font to container
 # You can download it from the url below
 # https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/OTF/SourceHanSansSC-VF.otf
 COPY fonts/SourceHanSansSC-VF.otf /usr/share/fonts/
 
+# expose port id you need
+# EXPOSE 8888
+
 COPY entrypoint.sh /usr/local/bin/
 
-# Part1
+# can go into container
+# CMD [ "tail", "-f", "task_save_baidu_research.py" ]
+
 ENTRYPOINT ["entrypoint.sh"]
 CMD [""]
-
-
-# Part2
-# CMD [ "tail", "-f", "task_save_baidu_research.py" ]
