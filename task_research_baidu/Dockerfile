@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
 # copy chinese font to container
 # You can download it from the url below
 # https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/OTF/SourceHanSansSC-VF.otf
-COPY fonts/SourceHanSansSC-VF.otf /usr/share/fonts/
+COPY fonts/* /usr/share/fonts/
 
 COPY entrypoint.sh /usr/local/bin/
 

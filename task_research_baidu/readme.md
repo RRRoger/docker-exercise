@@ -38,9 +38,8 @@ docker run -d --name research_iso \
     research_iso
 ```
 
-## Font Download Link
+## Fonts
 
-```txt
-https://raw.githubusercontent.com/adobe-fonts/source-han-sans/release/Variable/OTF/SourceHanSansSC-VF.otf
-```
+- [思源字体](https://github.com/adobe-fonts/source-han-serif/tree/release/)
+- [霞婺文楷](https://github.com/lxgw/LxgwWenKai/releases) 
 
