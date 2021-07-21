@@ -31,8 +31,6 @@ COPY entrypoint.sh /usr/local/bin/
 
 # Part1
 ENTRYPOINT ["entrypoint.sh"]
-CMD [""]
-
 
 # Part2
 # CMD [ "tail", "-f", "task_save_baidu_research.py" ]

@@ -15,27 +15,13 @@ docker rmi baidu_research
 
 docker build -t baidu_research .
 
-docker run -d --name baidu_research \
+docker run -it --name directly_research \
     -e KEYWORD="三体" \
     -v ~/workdir/OUT_FOLDER:/app/OUTPUT \
-    baidu_research
-```
+    directly_research
 
-- 2
-
-```bash
-cd docker-exercise/task_research_baidu
-
-docker rm research_iso
-
-docker rmi research_iso
-
-docker build -t research_iso .
-
-docker run -d --name research_iso \
-    -e KEYWORD="三体" \
-    -v ~/workdir/OUT_FOLDER:/app/OUTPUT \
-    research_iso
+# And after
+docker start directly_research
 ```
 
 ## Fonts

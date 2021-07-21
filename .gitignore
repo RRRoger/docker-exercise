@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # Roger's customization
+
 *.pdf
-fonts
+# Too big to upload
+SourceHanSansSC-VF.otf
