@@ -131,5 +131,6 @@ dmypy.json
 # Roger's customization
 
 *.pdf
+*.log
 # Too big to upload
 SourceHanSansSC-VF.otf
