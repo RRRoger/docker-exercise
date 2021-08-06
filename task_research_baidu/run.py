@@ -1,18 +1,28 @@
 #coding:utf-8
 
 """
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-    Task to research baidu with your keyword, 
-        And then save it as pdf on your local device.
+\b
+* * * * * * * * * * * * * * * * * * * * * * * * *
+Task to research baidu with your keyword, 
+And then save it as pdf on your local device.
+Please set proxy info in file `proxy_list.txt`
 
-    Author: Roger
-    Python Version: python3+
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+\b
+使用百度搜索关键词, 
+然后保存pdf在本地, 
+请先在`proxy_list.txt`里配置代理
+
+\b 
+Author: Roger;
+Python Version: python 3.7+;
+Python Libraries:
+    click: https://click-docs-zh-cn.readthedocs.io/zh/latest/
+    pdfkit: https://pypi.org/project/pdfkit/
+* * * * * * * * * * * * * * * * * * * * * * * * *
 """
 
 import click
 import datetime
-import sys
 import os
 import pdfkit
 import threading
@@ -22,10 +32,15 @@ from urllib.parse import quote_plus
 
 
 SUCCESS, ERROR, WARNING = 'SUCCESS', 'ERROR', 'WARNING'
-def _log(info, directory, level=SUCCESS):
+def _log(info, directory=None, level=SUCCESS):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print('%s - %s - %s' % (level, now, info))
-    log_path = osp.join(directory, f"log_{level.lower()}.log")
+    
+    if directory:
+        log_path = osp.join(directory, f"_log_{level.lower()}.log")
+    else:
+        log_path = f"_log_{level.lower()}.log"
+
     with open(log_path, 'a+') as f:
         f.write('%s %s %s\n' % (level, now, info))
 
@@ -44,7 +59,7 @@ class myThread(threading.Thread):
         print("开启线程： " + self.name)
         # 获取锁，用于线程同步
         threadLock.acquire()
-        start2create_pdf(self.file_prefix, self.wd, self.output_dir, self.types, self.proxy, debug)
+        start2create_pdf(self.file_prefix, self.wd, self.output_dir, self.types, self.proxy, self.debug)
         # 释放锁，开启下一个线程
         threadLock.release()
 
@@ -62,10 +77,11 @@ WEB_URL = "https://www.baidu.com/s?wd={wd}&pn={pn}"
 NEWS_URL = "https://www.baidu.com/s?tn=news&word={wd}&pn={pn}"
 
 
-help_c = """Task to research baidu with your keyword, and then save it as pdf."""
-help_output = "Output directory, like: ~/Desktop."
-help_wd = "The keyword what you want to resarch."
-help_debug = "Debug mode, don't use WKHTMLTOPDF."
+help_c = __doc__
+help_output = "导出的文件夹地址, like: `~/Desktop`"
+help_wd = "搜索的关键词, 用英文分号(`;`)分隔"
+help_debug = "Debug模式, 不使用pdfkit去拉数据"
+help_multi_progress = "多进程模式"
 
 
 def test_new_file(path):
@@ -83,9 +99,7 @@ def getsize(path):
 
 
 def real_create_pdf(path, url, proxy, debug):
-    """
-        use WKHTMLTOPDF get data
-    """
+    """use WKHTMLTOPDF get data"""
     if debug:
         time.sleep(1)
         with open(path, "w") as f:
@@ -96,14 +110,13 @@ def real_create_pdf(path, url, proxy, debug):
         options={
             '--proxy': f'http://{proxy}',
         },
-        url=url,
+        url=url
     )
     return True
 
 
 def start2create_pdf(file_prefix, wd, output_dir, types, proxy, debug):
     """Create Pdf"""
-    # _proxy_ip = proxy.split(":")[0]
     for _type in types:
 
         if _type == 'web':
@@ -119,35 +132,34 @@ def start2create_pdf(file_prefix, wd, output_dir, types, proxy, debug):
 
             try:
                 if os.path.exists(path):
-                    _log(f"Exists!! [{this_file_name}] - {_type} - {proxy}", output_dir, WARNING)
+                    _log(f"Exists!! {_type} - {proxy} - [{this_file_name}]", output_dir, WARNING)
                     continue
 
                 real_create_pdf(path, url, proxy, debug)
                 fsize = getsize(path)
-                _log(f"[{this_file_name}] - {_type} - {proxy} - {fsize}KB", output_dir)
+                _log(f"{_type} - {proxy} - [{this_file_name}] -  {fsize}KB", output_dir)
             except Exception as e:
-                _log(f"[{this_file_name}] - {_type} - {proxy} - e: {e}", output_dir, ERROR)
+                _log(f"{_type} - {proxy} - [{this_file_name}] - e: {e}", output_dir, ERROR)
 
-    _log(f"Pdf created {_type} - {proxy}.....", output_dir)
+    _log(f"[Process] Pdf creation finished... {_type} - {proxy}.....", output_dir)
     return True
 
 
 @click.command()
 @click.help_option("-h", "--help", help=help_c)
-@click.option("-o", "--output-dir", "output_dir", help=help_output, type=str, default="./OUTPUT")
 @click.option("-wd", "--keyword", "keywords", help=help_wd, type=str, required=True)
-@click.option("-d", "--debug", "debug", help=help_debug, type=bool, default=False)
-def main(output_dir, keywords, debug):
-
-    _log("Start to research .....", output_dir)
+@click.option("-mp", "--multi-progress", "multi_progress", help=help_multi_progress, is_flag=True, default=True)
+@click.option("-o", "--output-dir", "output_dir", help=help_output, type=str, default="./OUTPUT")
+@click.option("-d", "--debug", "debug", help=help_debug, is_flag=True)
+def main(output_dir, keywords, debug, multi_progress):
     today = datetime.datetime.now().strftime('%Y.%m.%d')
-
     output_dir = osp.join(output_dir, today)
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-    keywords = keywords.split(";")
+    _log("Start to research .....", output_dir)
 
+    keywords = keywords.split(";")
     for keyword in keywords:
 
         wd = quote_plus(keyword)
@@ -162,8 +174,14 @@ def main(output_dir, keywords, debug):
                     proxy_list.append(proxy)
 
             for proxy in proxy_list:
-                this_thread = threading.Thread(target=start2create_pdf, args=(file_prefix, wd, output_dir, ['web', 'news'], proxy, debug))
-                this_thread.start()
+                for _type in ['web', 'news']:
+                    if multi_progress:
+                        this_thread = threading.Thread(target=start2create_pdf, args=(
+                            file_prefix, wd, output_dir, [_type], proxy, debug
+                        ))
+                        this_thread.start()
+                    else:
+                        start2create_pdf(file_prefix, wd, output_dir, [_type], proxy, debug)
 
             # for t in threads:
             #     t.join()
