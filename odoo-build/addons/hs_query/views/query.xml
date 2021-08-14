@@ -1,0 +1,156 @@
+<odoo>
+    <data>
+        <record id="hs_query_statement_view_form" model="ir.ui.view">
+            <field name="name">数据库查询</field>
+            <field name="model">hs.query.statement</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="jump2page" icon="fa-play-circle" string="开始查询" type="object" class="oe_highlight"
+                                groups="hs_query.group_data_analysis_user"/>
+                        <button name="download_data" icon="fa-download" string="下载查询结果" type="object" class="oe_highlight"
+                                groups="hs_query.group_data_analysis_user"/>
+                        <button name="export_query_statement" icon="fa-cloud-download" string="下载数据库查询配置" type="object" class="oe_highlight"
+                                groups="hs_query.group_data_analysis_manager"/>
+                        <button name="import_query_statement" icon="fa-cloud-upload" string="上传数据库查询配置" type="object" class="oe_highlight"
+                                groups="hs_query.group_data_analysis_manager"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" required="1"/>
+                                <field name="code" required="1"/>
+                                <field name="type" required="1"
+                                       groups="hs_query.group_data_analysis_manager"/>
+                                <field name="sequence" required="1"
+                                       groups="hs_query.group_data_analysis_manager"/>
+                                <field name="wizard_name" required="1"
+                                       groups="hs_query.group_data_analysis_manager"/>
+                                <field name="user_ids" widget="many2many_tags" options="{'no_create_edit': 1, 'no_create': 1}"
+                                       groups="hs_query.group_data_analysis_manager"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="note"/>
+                        </group>
+                        <notebook>
+                            <page string="语句" groups="hs_query.group_data_analysis_manager">
+                                <field name="statement" required="1" groups="hs_query.group_data_analysis_manager"/>
+                            </page>
+                            <page string="输出信息" groups="hs_query.group_data_analysis_manager">
+                                <field name="output_ids" mode="tree">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="alias" required="1"/>
+                                        <field name="name" required="1"/>
+                                        <field name="note"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="查询记录">
+                                <field name="record_ids" mode="tree" readonly="1">
+                                    <tree editable="bottom">
+                                        <field name="user_id"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="下载记录">
+                                <field name="download_ids" mode="tree" readonly="1">
+                                    <tree editable="bottom">
+                                        <field name="file" filename="file_name"/>
+                                        <field name="file_name" invisible="1"/>
+                                        <field name="create_uid"/>
+                                        <field name="create_date"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hs_query_statement_view_tree" model="ir.ui.view">
+            <field name="name">数据库查询</field>
+            <field name="model">hs.query.statement</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="sequence" widget="handle"/>
+                    <button name="jump2page" icon="fa-play-circle" string="开始查询" type="object"
+                            groups="base.group_system,hs_query.group_data_analysis_user"/>
+                    <button name="download_data" icon="fa-download" string="下载查询结果" type="object"
+                            groups="base.group_system,hs_query.group_data_analysis_user"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="type" groups="hs_query.group_data_analysis_manager"/>
+                    <field name="wizard_name" groups="hs_query.group_data_analysis_manager"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hs_query_statement_search_view" model="ir.ui.view">
+            <field name="model">hs.query.statement</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="type"/>
+                    <field name="wizard_name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="hs_query_statement_action_window" model="ir.actions.act_window">
+            <field name="name">数据库查询</field>
+            <field name="res_model">hs.query.statement</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hs_query_statement_search_view"/>
+        </record>
+
+        <record id="hs_query_download_file_view_form" model="ir.ui.view">
+            <field name="name">文件下载</field>
+            <field name="model">hs.query.download.file</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="file" filename="file_name" readonly="1"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <footer>
+                        <span/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hs_query_download_file_view_tree" model="ir.ui.view">
+            <field name="name">下载记录</field>
+            <field name="model">hs.query.download.file</field>
+            <field name="arch" type="xml">
+                <tree editable="top" edit='false' create="false">
+                    <field name="file" filename="file_name" readonly="1"/>
+                    <field name="file_name" invisible="1"/>
+                    <field name="statement_id"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hs_query_download_file_action_window" model="ir.actions.act_window">
+            <field name="name">下载记录</field>
+            <field name="res_model">hs.query.download.file</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+    </data>
+</odoo>
